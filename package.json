@@ -25,7 +25,10 @@
   "dependencies": {
     "@atomist/automation-client": "^1.6.2",
     "@atomist/sdm": "^1.6.1",
-    "@atomist/sdm-core": "^1.6.1"
+    "@atomist/sdm-core": "^1.6.1",
+    "@atomist/sdm-pack-aspect": "^1.0.0-provideFilesChanged.20190909224312",
+    "@atomist/sdm-pack-fingerprint": "^5.0.0-master.20190903062633",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@atomist/sdm-local": "^1.0.10",

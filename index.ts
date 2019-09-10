@@ -14,34 +14,17 @@
  * limitations under the License.
  */
 
-import { AnyPush } from "@atomist/sdm";
 import { configure } from "@atomist/sdm-core";
-import { HelloWorldGoalConfigurer } from "./lib/goals/goalConfigurer";
-import { HelloWorldGoalCreator } from "./lib/goals/goalCreator";
-import { HelloWorldGoals } from "./lib/goals/goals";
+import { aspectSupport } from "@atomist/sdm-pack-aspect";
+import { Aspect } from "@atomist/sdm-pack-fingerprint";
+import { TypeScriptSourceDirectoriesAspect } from "./lib/aspects/TypeScriptSourceDirectories";
 
 /**
  * The main entry point into the SDM
  */
-export const configuration = configure<HelloWorldGoals>(async sdm => {
-
-    // Use the sdm instance to configure commands etc
-    sdm.addCommand({
-        name: "HelloWorld",
-        description: "Command that responds with a 'hello world'",
-        listener: async ci => {
-            await ci.addressChannels("Hello World");
-        },
-    });
-
-    // Create goals and configure them
-    const goals = await sdm.createGoals(HelloWorldGoalCreator, [HelloWorldGoalConfigurer]);
-
-    // Return all push rules
-    return {
-        hello: {
-            test: AnyPush,
-            goals: goals.helloWorld,
-        },
-    };
+export const configuration = configure(async sdm => {
+    const aspects: Aspect[] = [TypeScriptSourceDirectoriesAspect];
+    sdm.addExtensionPacks(aspectSupport({
+        aspects,
+    }));
 });
