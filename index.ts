@@ -15,9 +15,15 @@
  */
 
 import { configure } from "@atomist/sdm-core";
-import { aspectSupport, Tagger } from "@atomist/sdm-pack-aspect";
+import {
+    aspectSupport,
+    Tagger,
+} from "@atomist/sdm-pack-aspect";
 import { Aspect } from "@atomist/sdm-pack-fingerprint";
-import { TypeScriptOutDirAspect, TypeScriptOutDirFingerprintName } from "./lib/aspects/TypeScriptOutDir";
+import {
+    TypeScriptOutDirAspect,
+    TypeScriptOutDirFingerprintName,
+} from "./lib/aspects/TypeScriptOutDir";
 import {
     TypeScriptSourceCountByDirectoryFingerprintName,
     TypeScriptSourceDirectoriesAspect,
