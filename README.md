@@ -8,12 +8,28 @@ This SDM visualizes aspects of TypeScript repositories.
 
 [atomist-doc]: https://docs.atomist.com/ (Atomist Documentation)
 
-## Getting started
+## Using this
 
-See the [Developer Quick Start][atomist-quick] to jump straight to
-creating an SDM.
+Clone this repository. 
 
-[atomist-quick]: https://docs.atomist.com/quick-start/ (Atomist - Developer Quick Start)
+Install the Atomist CLI: `npm install -g @atomist/cli`
+
+Set up Postgres to store the data, as described in [Aspect support database setup](https://github.com/atomist/sdm-pack-aspect/#database-setup).
+
+Inside this repo's directory, use the Atomist CLI to start this SDM: `atomist start --local`
+
+Once that's going, visit `http://localhost:2866` and it should tell you that you need to analyze some repositories.
+
+Use the CLI to send an analyze command. I used: 
+
+`atomist analyze github by query --cloneUnder ~/temp --poolSize 5 --update true --query "language:typescript stars:>=1000 size:<=10000"`
+
+This says to run that query on GitHub (TypeScript repos under 10Mb with 1000 stars), clone each repository under a local temp directory (handy for re-using clones after I change my code and want to run it again), run up to five of them at a time, and always update the data in the database.
+
+That command will give you a link to watch the analysis as it's progressing: `http://localhost:2866/analysis`. Hit refresh to update.
+
+When it's done, return to `http://localhost:2866` -- click on "Interactive Explorer" to see who has what input and output directories. Or look around.
+
 
 ## Contributing
 
