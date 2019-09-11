@@ -37,8 +37,8 @@ function toTypeScriptSourceDirectoriesFingerprint(data: TypeScriptSourceDirector
 }
 
 export const extractTypeScriptSourceDirectories: // ExtractFingerprint
-    (p: Project) => Promise<Array<FP<TypeScriptSourceDirectoriesFingerprintData>>> = async p => {
-        const allDirs = await gatherFromFiles(p, ["**/*.ts", "**/*.tsx", "!**/*.d.ts"], async f => path.dirname(f.path).split(path.sep)[0]);
+    (p: Project) => Promise<Array<FP<TypeScriptSourceDirectoriesFingerprintData>>> = async project => {
+        const allDirs = await gatherFromFiles(project, ["**/*.ts", "**/*.tsx", "!**/*.d.ts"], async f => path.dirname(f.path).split(path.sep)[0]);
         if (!allDirs || allDirs.length === 0) {
             return [];
         }
