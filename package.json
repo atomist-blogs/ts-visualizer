@@ -23,15 +23,15 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "dependencies": {
-    "@atomist/automation-client": "^1.6.2",
-    "@atomist/sdm": "^1.6.1",
-    "@atomist/sdm-core": "^1.6.1",
+    "@atomist/automation-client": "^1.7.0-master.20190909084408",
+    "@atomist/sdm": "^1.7.0-master.20190909163442",
+    "@atomist/sdm-core": "^1.7.1-master.20190911161431",
     "@atomist/sdm-pack-aspect": "^1.0.0-provideFilesChanged.20190909224312",
-    "@atomist/sdm-pack-fingerprint": "^5.0.0-master.20190903062633",
+    "@atomist/sdm-pack-fingerprint": "^5.0.0-master.20190911161022",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
-    "@atomist/sdm-local": "^1.0.10",
+    "@atomist/sdm-local": "^1.2.1-master.20190909183016",
     "@types/mocha": "^5.2.7",
     "@types/power-assert": "^1.5.0",
     "espower-typescript": "^9.0.2",

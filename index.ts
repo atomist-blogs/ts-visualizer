@@ -27,6 +27,7 @@ export const configuration = configure(async sdm => {
     const taggers: Tagger[] = ["src", "lib", ".", "test", "tests"].map(sourceDirectoryTagger);
     sdm.addExtensionPacks(aspectSupport({
         aspects,
+        taggers,
     }));
 });
 
