@@ -48,7 +48,6 @@ export const extractTypeScriptSourceDirectories: // ExtractFingerprint
         }).sort(byCountAndThenName);
         const directories = counts.map(c => c.name);
         const fp = toTypeScriptSourceDirectoriesFingerprint({ directories });
-        (fp as any).tags = directories;
         return [fp];
     };
 
