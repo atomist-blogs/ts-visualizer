@@ -24,7 +24,7 @@ interface TypeScriptSourceDirectoriesFingerprintData { directories: string[]; }
 
 const TypeScriptSourceDirectoriesAspectName = "TypeScriptSourceDirectories";
 
-const TypeScriptSourceCountByDirectoryFingerprintName = "TypeScriptSourceCountByDirectory";
+export const TypeScriptSourceCountByDirectoryFingerprintName = "TypeScriptSourceCountByDirectory";
 
 function toTypeScriptSourceDirectoriesFingerprint(data: TypeScriptSourceDirectoriesFingerprintData):
     FP<TypeScriptSourceDirectoriesFingerprintData> {
@@ -38,7 +38,7 @@ function toTypeScriptSourceDirectoriesFingerprint(data: TypeScriptSourceDirector
 
 export const extractTypeScriptSourceDirectories: // ExtractFingerprint
     (p: Project) => Promise<Array<FP<TypeScriptSourceDirectoriesFingerprintData>>> = async p => {
-        const allDirs = await gatherFromFiles(p, "**/*.ts", async f => path.dirname(f.path).split(path.sep)[0]);
+        const allDirs = await gatherFromFiles(p, ["**/*.ts", "**/*.tsx", "!**/*.d.ts"], async f => path.dirname(f.path).split(path.sep)[0]);
         if (!allDirs || allDirs.length === 0) {
             return [];
         }
@@ -46,7 +46,10 @@ export const extractTypeScriptSourceDirectories: // ExtractFingerprint
         const counts = Object.keys(filesByPath).map(dir => {
             return { name: dir, count: filesByPath[dir].length };
         }).sort(byCountAndThenName);
-        return [toTypeScriptSourceDirectoriesFingerprint({ directories: counts.map(c => c.name) })];
+        const directories = counts.map(c => c.name);
+        const fp = toTypeScriptSourceDirectoriesFingerprint({ directories });
+        (fp as any).tags = directories;
+        return [fp];
     };
 
 function byCountAndThenName<T extends { name: string, count: number }>(a: T, b: T): number {

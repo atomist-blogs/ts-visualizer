@@ -15,16 +15,30 @@
  */
 
 import { configure } from "@atomist/sdm-core";
-import { aspectSupport } from "@atomist/sdm-pack-aspect";
+import { aspectSupport, Tagger } from "@atomist/sdm-pack-aspect";
 import { Aspect } from "@atomist/sdm-pack-fingerprint";
-import { TypeScriptSourceDirectoriesAspect } from "./lib/aspects/TypeScriptSourceDirectories";
+import { TypeScriptSourceCountByDirectoryFingerprintName, TypeScriptSourceDirectoriesAspect } from "./lib/aspects/TypeScriptSourceDirectories";
 
 /**
  * The main entry point into the SDM
  */
 export const configuration = configure(async sdm => {
     const aspects: Aspect[] = [TypeScriptSourceDirectoriesAspect];
+    const taggers: Tagger[] = ["src", "lib", ".", "test", "tests"].map(sourceDirectoryTagger);
     sdm.addExtensionPacks(aspectSupport({
         aspects,
     }));
 });
+
+function sourceDirectoryTagger(dirName: string): Tagger {
+    return {
+        name: "source:" + dirName,
+        test: async par => {
+            const tssdfp = par.analysis.fingerprints.find(fp => fp.name === TypeScriptSourceCountByDirectoryFingerprintName);
+            if (!tssdfp) {
+                return false;
+            }
+            return tssdfp.data.directories.includes(dirName);
+        },
+    };
+}

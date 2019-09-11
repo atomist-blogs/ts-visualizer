@@ -58,6 +58,25 @@ describe("Figure out where people keep their TS source", () => {
         assert.deepStrictEqual(fp.data, { directories: ["src", "."] });
     });
 
+    it("Does not include .d.ts files", async () => {
+        const p = InMemoryProject.of({ path: "src/index.ts", content: "// some TS" },
+            { path: "dist/index.d.ts", content: "// some declarations" });
+
+        const extractedFingerprints = await extractTypeScriptSourceDirectories(p);
+        assert.strictEqual(extractedFingerprints.length, 1);
+        const fp = extractedFingerprints[0];
+        assert.deepStrictEqual(fp.data, { directories: ["src"] });
+    });
+
+    it("includes .tsx files", async () => {
+        const p = InMemoryProject.of({ path: "src/view.tsx", content: "// some TS" });
+
+        const extractedFingerprints = await extractTypeScriptSourceDirectories(p);
+        assert.strictEqual(extractedFingerprints.length, 1);
+        const fp = extractedFingerprints[0];
+        assert.deepStrictEqual(fp.data, { directories: ["src"] });
+    });
+
     it("ties are alphabetical", async () => {
         const p = InMemoryProject.of({ path: "index.ts", content: "// some TS" },
             { path: "src/whatever.ts", content: "// some TS" },
