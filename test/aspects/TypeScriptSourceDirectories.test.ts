@@ -81,5 +81,4 @@ describe("Figure out where people keep their TS source", () => {
         assert.deepStrictEqual(fp.data, { directories: [".", "lib", "src"] });
     });
 
-    it("ignores a test directory with TS source");
 });
