@@ -15,10 +15,7 @@
  */
 
 import { Project } from "@atomist/automation-client";
-import { gatherFromFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
 import { Aspect, FP, sha256 } from "@atomist/sdm-pack-fingerprint";
-import * as _ from "lodash";
-import * as path from "path";
 
 interface TypeScriptOutDirFingerprintData { directory: string | undefined; }
 
@@ -47,7 +44,8 @@ export const extractTypeScriptOutDir:
         if (!outDirMatch) {
             return [toTypeScriptOutDirFingerprint({ directory: undefined })];
         }
-        const fp = toTypeScriptOutDirFingerprint({ directory: outDirMatch[1] });
+        const directory = outDirMatch[1].replace(/\/$/, "").replace(/^.\//, "");
+        const fp = toTypeScriptOutDirFingerprint({ directory });
         return [fp];
     };
 

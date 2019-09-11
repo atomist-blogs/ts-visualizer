@@ -17,17 +17,22 @@
 import { configure } from "@atomist/sdm-core";
 import { aspectSupport, Tagger } from "@atomist/sdm-pack-aspect";
 import { Aspect } from "@atomist/sdm-pack-fingerprint";
-import { TypeScriptSourceCountByDirectoryFingerprintName, TypeScriptSourceDirectoriesAspect } from "./lib/aspects/TypeScriptSourceDirectories";
+import { TypeScriptOutDirAspect, TypeScriptOutDirFingerprintName } from "./lib/aspects/TypeScriptOutDir";
+import {
+    TypeScriptSourceCountByDirectoryFingerprintName,
+    TypeScriptSourceDirectoriesAspect,
+} from "./lib/aspects/TypeScriptSourceDirectories";
 
 /**
  * The main entry point into the SDM
  */
 export const configuration = configure(async sdm => {
-    const aspects: Aspect[] = [TypeScriptSourceDirectoriesAspect];
-    const taggers: Tagger[] = ["src", "lib", ".", "test", "tests"].map(sourceDirectoryTagger);
+    const aspects: Aspect[] = [TypeScriptSourceDirectoriesAspect, TypeScriptOutDirAspect];
+    const sourceDirTaggers: Tagger[] = ["src", "lib", ".", "test", "tests"].map(sourceDirectoryTagger);
+    const outDirTaggers: Tagger[] = ["dist", "lib", "build"].map(outputDirectoryTagger);
     sdm.addExtensionPacks(aspectSupport({
         aspects,
-        taggers,
+        taggers: [...sourceDirTaggers, ...outDirTaggers, outputDirectoryNoneTagger],
     }));
 });
 
@@ -43,3 +48,26 @@ function sourceDirectoryTagger(dirName: string): Tagger {
         },
     };
 }
+
+function outputDirectoryTagger(dirName: string): Tagger {
+    return {
+        name: "output:" + dirName,
+        test: async par => {
+            const tssdfp = par.analysis.fingerprints.find(fp => fp.name === TypeScriptOutDirFingerprintName);
+            if (!tssdfp) {
+                return false;
+            }
+            return tssdfp.data.directory === dirName;
+        },
+    };
+}
+const outputDirectoryNoneTagger: Tagger = {
+    name: "output:none",
+    test: async par => {
+        const tssdfp = par.analysis.fingerprints.find(fp => fp.name === TypeScriptOutDirFingerprintName);
+        if (!tssdfp) {
+            return false;
+        }
+        return !tssdfp.data.directory;
+    },
+};

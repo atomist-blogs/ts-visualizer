@@ -54,4 +54,34 @@ describe("Notice where people put their compiled output", () => {
         const result = extractedFingerprints[0].data.directory;
         assert.strictEqual(result, "dist");
     });
+
+    it("strips / from the end", async () => {
+        const p = InMemoryProject.of({
+            path: "tsconfig.json", content: `{
+  "compilerOptions": {
+    "newLine": "LF",
+    "outDir": "./",
+  }
+}` });
+
+        const extractedFingerprints = await extractTypeScriptOutDir(p);
+        assert.strictEqual(extractedFingerprints.length, 1);
+        const result = extractedFingerprints[0].data.directory;
+        assert.strictEqual(result, ".");
+    });
+
+    it("strips ./ from the beginning", async () => {
+        const p = InMemoryProject.of({
+            path: "tsconfig.json", content: `{
+  "compilerOptions": {
+    "newLine": "LF",
+    "outDir": "./dist",
+  }
+}` });
+
+        const extractedFingerprints = await extractTypeScriptOutDir(p);
+        assert.strictEqual(extractedFingerprints.length, 1);
+        const result = extractedFingerprints[0].data.directory;
+        assert.strictEqual(result, "dist");
+    });
 });
