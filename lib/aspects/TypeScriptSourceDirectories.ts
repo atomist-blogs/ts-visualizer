@@ -42,23 +42,10 @@ export const extractTypeScriptSourceDirectories: // ExtractFingerprint
         if (!allDirs || allDirs.length === 0) {
             return [];
         }
-        const filesByPath = _.groupBy(allDirs);
-        const counts = Object.keys(filesByPath).map(dir => {
-            return { name: dir, count: filesByPath[dir].length };
-        }).sort(byCountAndThenName);
-        const directories = counts.map(c => c.name);
+        const directories = _.uniq(allDirs).sort();
         const fp = toTypeScriptSourceDirectoriesFingerprint({ directories });
         return [fp];
     };
-
-function byCountAndThenName<T extends { name: string, count: number }>(a: T, b: T): number {
-    if (a.count > b.count) { return -1; }
-    if (b.count > a.count) { return 1; }
-
-    if (a.name > b.name) { return 1; }
-    if (b.name > a.name) { return -1; }
-    return 0;
-}
 
 export const TypeScriptSourceDirectoriesAspect: Aspect<TypeScriptSourceDirectoriesFingerprintData> = {
     displayName: "TS Source Directories",
