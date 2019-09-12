@@ -31,6 +31,18 @@ That command will give you a link to watch the analysis as it's progressing: `ht
 When it's done, return to `http://localhost:2866` -- click on "Interactive Explorer" to see who has what input and output directories. Or look around.
 
 
+### Database queries
+
+For the record, after running an analysis I opened my Postgres database and used this to find the most frequent source directories:
+
+```sql
+select jsonb_array_elements(data -> 'directories')  as "Directory", count(*)
+from fingerprints 
+where name = 'TypeScriptSourceCountByDirectory'
+group by 1
+order by 2 desc;
+```
+
 ## Contributing
 
 Contributions to this project from community members are encouraged
