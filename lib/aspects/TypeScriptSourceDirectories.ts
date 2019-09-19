@@ -38,11 +38,12 @@ function toTypeScriptSourceDirectoriesFingerprint(data: TypeScriptSourceDirector
 
 export const extractTypeScriptSourceDirectories: // ExtractFingerprint
     (p: Project) => Promise<Array<FP<TypeScriptSourceDirectoriesFingerprintData>>> = async project => {
-        const allDirs = await gatherFromFiles(project, ["**/*.ts", "**/*.tsx", "!**/*.d.ts"], async f => path.dirname(f.path).split(path.sep)[0]);
+        const allDirs = await gatherFromFiles(project, ["**/*.ts", "**/*.tsx", "!**/*.d.ts"],
+            async f => path.dirname(f.path).split(path.sep)[0]);
+        const directories = _.uniq(allDirs).sort();
         if (!allDirs || allDirs.length === 0) {
             return [];
         }
-        const directories = _.uniq(allDirs).sort();
         const fp = toTypeScriptSourceDirectoriesFingerprint({ directories });
         return [fp];
     };
