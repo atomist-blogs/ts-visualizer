@@ -21,11 +21,12 @@ import {
 } from "@atomist/sdm-pack-aspect";
 import { Aspect } from "@atomist/sdm-pack-fingerprint";
 import {
+    outputDirectoryNoneTagger,
+    outputDirectoryTagger,
     TypeScriptOutDirAspect,
-    TypeScriptOutDirFingerprintName,
 } from "./lib/aspects/TypeScriptOutDir";
 import {
-    TypeScriptSourceCountByDirectoryFingerprintName,
+    sourceDirectoryTagger,
     TypeScriptSourceDirectoriesAspect,
 } from "./lib/aspects/TypeScriptSourceDirectories";
 
@@ -41,39 +42,3 @@ export const configuration = configure(async sdm => {
         taggers: [...sourceDirTaggers, ...outDirTaggers, outputDirectoryNoneTagger],
     }));
 });
-
-function sourceDirectoryTagger(dirName: string): Tagger {
-    return {
-        name: "source:" + dirName,
-        test: async par => {
-            const tssdfp = par.analysis.fingerprints.find(fp => fp.name === TypeScriptSourceCountByDirectoryFingerprintName);
-            if (!tssdfp) {
-                return false;
-            }
-            return tssdfp.data.directories.includes(dirName);
-        },
-    };
-}
-
-function outputDirectoryTagger(dirName: string): Tagger {
-    return {
-        name: "output:" + dirName,
-        test: async par => {
-            const tssdfp = par.analysis.fingerprints.find(fp => fp.name === TypeScriptOutDirFingerprintName);
-            if (!tssdfp) {
-                return false;
-            }
-            return tssdfp.data.directory === dirName;
-        },
-    };
-}
-const outputDirectoryNoneTagger: Tagger = {
-    name: "output:none",
-    test: async par => {
-        const tssdfp = par.analysis.fingerprints.find(fp => fp.name === TypeScriptOutDirFingerprintName);
-        if (!tssdfp) {
-            return false;
-        }
-        return !tssdfp.data.directory;
-    },
-};

@@ -19,6 +19,7 @@ import { gatherFromFiles } from "@atomist/automation-client/lib/project/util/pro
 import { Aspect, FP, sha256 } from "@atomist/sdm-pack-fingerprint";
 import * as _ from "lodash";
 import * as path from "path";
+import { Tagger } from "@atomist/sdm-pack-aspect";
 
 interface TypeScriptSourceDirectoriesFingerprintData { directories: string[]; }
 
@@ -55,3 +56,16 @@ export const TypeScriptSourceDirectoriesAspect: Aspect<TypeScriptSourceDirectori
     toDisplayableFingerprintName: () => "TypeScript Source Directories",
     toDisplayableFingerprint: fp => fp.data.directories.join(", "),
 };
+
+export function sourceDirectoryTagger(dirName: string): Tagger {
+    return {
+        name: "source:" + dirName,
+        test: async par => {
+            const tssdfp = par.analysis.fingerprints.find(fp => fp.name === TypeScriptSourceCountByDirectoryFingerprintName);
+            if (!tssdfp) {
+                return false;
+            }
+            return tssdfp.data.directories.includes(dirName);
+        },
+    };
+}

@@ -15,6 +15,7 @@
  */
 
 import { Project } from "@atomist/automation-client";
+import { Tagger } from "@atomist/sdm-pack-aspect";
 import { Aspect, FP, sha256 } from "@atomist/sdm-pack-fingerprint";
 
 interface TypeScriptOutDirFingerprintData { directory: string | undefined; }
@@ -55,4 +56,27 @@ export const TypeScriptOutDirAspect: Aspect<TypeScriptOutDirFingerprintData> = {
     extract: extractTypeScriptOutDir,
     toDisplayableFingerprintName: () => "TypeScript Output Directory",
     toDisplayableFingerprint: fp => fp.data.directory || "none",
+};
+
+export function outputDirectoryTagger(dirName: string): Tagger {
+    return {
+        name: "output:" + dirName,
+        test: async par => {
+            const tssdfp = par.analysis.fingerprints.find(fp => fp.name === TypeScriptOutDirFingerprintName);
+            if (!tssdfp) {
+                return false;
+            }
+            return tssdfp.data.directory === dirName;
+        },
+    };
+}
+export const outputDirectoryNoneTagger: Tagger = {
+    name: "output:none",
+    test: async par => {
+        const tssdfp = par.analysis.fingerprints.find(fp => fp.name === TypeScriptOutDirFingerprintName);
+        if (!tssdfp) {
+            return false;
+        }
+        return !tssdfp.data.directory;
+    },
 };
