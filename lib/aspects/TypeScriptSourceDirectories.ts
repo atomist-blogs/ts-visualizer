@@ -16,10 +16,10 @@
 
 import { Project } from "@atomist/automation-client";
 import { gatherFromFiles } from "@atomist/automation-client/lib/project/util/projectUtils";
+import { Tagger } from "@atomist/sdm-pack-aspect";
 import { Aspect, FP, sha256 } from "@atomist/sdm-pack-fingerprint";
 import * as _ from "lodash";
 import * as path from "path";
-import { Tagger } from "@atomist/sdm-pack-aspect";
 
 interface TypeScriptSourceDirectoriesFingerprintData { directories: string[]; }
 
