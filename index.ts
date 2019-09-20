@@ -20,6 +20,7 @@ import {
     Tagger,
 } from "@atomist/sdm-pack-aspect";
 import { Aspect } from "@atomist/sdm-pack-fingerprint";
+import { SeparateSourceFromOutputAspect } from "./lib/aspects/SeparateSourceFromOutput";
 import {
     outputDirectoryNoneTagger,
     outputDirectoryTagger,
@@ -34,7 +35,10 @@ import {
  * The main entry point into the SDM
  */
 export const configuration = configure(async sdm => {
-    const aspects: Aspect[] = [TypeScriptSourceDirectoriesAspect, TypeScriptOutDirAspect];
+    const aspects: Aspect[] = [
+        SeparateSourceFromOutputAspect,
+        TypeScriptSourceDirectoriesAspect,
+        TypeScriptOutDirAspect];
     const sourceDirTaggers: Tagger[] = ["src", "lib", ".", "test", "tests"].map(sourceDirectoryTagger);
     const outDirTaggers: Tagger[] = ["dist", "lib", "build"].map(outputDirectoryTagger);
     sdm.addExtensionPacks(aspectSupport({
