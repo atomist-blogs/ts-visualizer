@@ -28,7 +28,7 @@
     "@atomist/sdm-core": "^1.7.1-master.20190911161431",
     "@atomist/sdm-pack-aspect": "^1.0.0-provideFilesChanged.20190909224312",
     "@atomist/sdm-pack-fingerprint": "^5.0.0-master.20190911161022",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.19"
   },
   "devDependencies": {
     "@atomist/sdm-local": "^1.2.1-master.20190909183016",
